@@ -49,70 +49,107 @@ class Horario:
         return grade
     
     def gerar_individuo_aleatorio(self):
-        todas_alocacoes = self.alocacoes.copy()
-        random.shuffle(todas_alocacoes)
 
-        # Limpa a ocupacao das salas antes de gerar, evitando que slots ocupados num individuo anterior bloqueiem este.
         for sala in self.salas:
             sala.limpar_ocupacao()
 
-        # Monta lista apenas com slots NAO bloqueados pelo professor
+        # RR7
+        if not self.check_horas_livres_minimas():
+            print(f"{self.professor.nome} excedeu o limite de horários bloqueados.")
+            return
+
+        todas_alocacoes = self.alocacoes.copy()
+
+        # MAIS IMPORTANTE:
+        # ordena disciplinas maiores primeiro
+        todas_alocacoes.sort(
+            key=lambda x: x[0].carga_horaria,
+            reverse=True
+        )
+
         bloqueados = self.professor.getHorarios_Bloqueados()
-        slots_disponiveis = []
 
-        for dia in DIAS:
-            for turno in TURNOS:
-                for slot in TURNOS[turno]:
-                    if (dia, turno, slot) not in bloqueados:
-                        slots_disponiveis.append((dia, turno, slot))
+        for alocacao in todas_alocacoes:
 
-        #  embaralha os slots
-        random.shuffle(slots_disponiveis)
-
-        # Aloca cada alocacao em um slot disponivel
-        for i in range(len(todas_alocacoes)):
-            if i >= len(slots_disponiveis):
-                print(f"Aviso: slots do professor {self.professor} insuficientes para todas as alocacoes.")
-                break
- 
-            alocacao = todas_alocacoes[i]
-            dia, turno, slot = slots_disponiveis[i]
             disciplina = alocacao[0]
 
-            # Verifica se a disciplina já possui um professor atribuido
-            if disciplina.professor is not None: 
-                print(f"A disciplina {disciplina}, já possui um professor")
-                continue
+            carga = disciplina.carga_horaria
 
-            # Filtra salas compativeis com o tipo da disciplina (lab ou nao)
-            salas_compativeis = self.check_salas(dia, turno, slot, disciplina)
+            aulas_alocadas = 0
 
-            if len(salas_compativeis) == 0:
-                continue
-            
-            # Verifica se ontem teve aula a noite para bloquear o slot M-AB 
-            dia_atual = DIAS.index(dia)
-            if self.check_noite_manha(dia_atual, turno, slot):
-                continue
+            tentativas = []
 
-            # Verifica se o professor já possui 6 aulas no dia atual
-            if self.check_aulas_no_dia(dia) >= 6:
-                continue
+            # gera TODOS os slots possíveis
+            for dia in DIAS:
+                for turno in TURNOS:
+                    for slot in TURNOS[turno]:
 
-            sala = random.choice(salas_compativeis)
-            self.grade[dia][turno][slot] = Aula(alocacao, sala)
-            sala.ocupar(dia, turno, slot) # Ocupa aquela sala naquele horário
+                        tentativas.append((dia, turno, slot))
+
+            random.shuffle(tentativas)
+
+            for dia, turno, slot in tentativas:
+
+                if aulas_alocadas >= carga:
+                    break
+
+                # ocupado
+                if self.grade[dia][turno][slot] is not None:
+                    continue
+
+                # bloqueado
+                if (dia, turno, slot) in bloqueados:
+                    continue
+
+                # RR11
+                dia_atual = DIAS.index(dia)
+
+                if self.check_noite_manha(dia_atual, turno, slot):
+                    continue
+
+                # RR10
+                if self.check_aulas_no_dia(dia) >= 6:
+                    continue
+
+                salas_compativeis = self.check_salas(
+                    dia,
+                    turno,
+                    slot,
+                    disciplina
+                )
+
+                if len(salas_compativeis) == 0:
+                    continue
+
+                sala = random.choice(salas_compativeis)
+
+                self.grade[dia][turno][slot] = Aula(alocacao, sala)
+
+                sala.ocupar(dia, turno, slot)
+
+                aulas_alocadas += 1
+
+            if aulas_alocadas < carga:
+
+                print(
+                    f"Não foi possível alocar completamente "
+                    f"{disciplina.nome}"
+                )
     
-    def funcao_fitness(self):
-        pontuacao = 0
-        
-        for aula in self.grade:
-            pass
-        # for dia in DIAS:
-        #     for turno in TURNOS:
-        #         for slot in TURNOS[turno]:
-                    
-        #             if 
+    # Funções Auxiliares:
+
+    def check_horas_livres_minimas(self):
+
+        bloqueados = self.professor.getHorarios_Bloqueados()
+
+        horas_bloqueadas = 0
+
+        for dia, turno, slot in bloqueados:
+
+            if turno in ["M", "T"]:
+                horas_bloqueadas += 2
+
+        return horas_bloqueadas <= 20
 
     def horario_grade(self, dia, turno, slot):  # retorna um objeto do tipo Aula
         
@@ -124,8 +161,49 @@ class Horario:
                 print(f"Matéria: {aula.disciplina.nome}\nTurma: {aula.turma.cod}\nLaboratório: {aula.sala.num_sala}\n")
             else:
                 print(f"Matéria: {aula.disciplina.nome}\nTurma: {aula.turma.cod}\nSala: {aula.sala.num_sala}\n")
+
+    def get_indices_dias_utilizados(self):
+        dias_utilizados = set()
+
+        for indice_dia, dia in enumerate(DIAS):
+
+            possui_aula = False
+
+            for turno in TURNOS:
+                for slot in TURNOS[turno]:
+
+                    aula = self.grade[dia][turno][slot]
+
+                    if aula is not None:
+                        possui_aula = True
+                        break
+
+                if possui_aula:
+                    break
+
+            if possui_aula:
+                dias_utilizados.add(indice_dia)
+
+        return sorted(dias_utilizados)
     
-    # Funções Auxiliares:
+    def check_dias_concentrados(self):
+
+        dias_utilizados = self.get_indices_dias_utilizados()
+
+        # 0 ou 1 dia sempre é concentrado
+        if len(dias_utilizados) <= 1:
+            return True
+
+        # verifica buracos
+        for i in range(len(dias_utilizados) - 1):
+
+            atual = dias_utilizados[i]
+            proximo = dias_utilizados[i + 1]
+
+            if proximo - atual > 1:
+                return False
+
+        return True
 
     def check_salas(self, dia, turno, slot, disciplina):
         salas_compativeis = []

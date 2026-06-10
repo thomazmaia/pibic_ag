@@ -19,6 +19,7 @@ import random
 from Individuo import Individuo
 from Horario import Horario
 from fitness import calcular_fitness
+from Sala import Sala
 
 
 class Populacao:
@@ -70,6 +71,19 @@ class Populacao:
 
         for i in range(self.tamanho):
 
+            # Limpa a ocupacao das salas antes de gerar, evitando que slots ocupados num individuo anterior bloqueiem este.
+            salas_visitadas = set()
+
+            for config in self.configuracoes:
+
+                for sala in config['salas']:
+
+                    if id(sala) not in salas_visitadas:
+
+                        sala.limpar_ocupacao()
+
+                        salas_visitadas.add(id(sala))
+
             grades = list()  # lista de Horario, um por professor
 
             for config in self.configuracoes:
@@ -77,6 +91,7 @@ class Populacao:
                     config['professor'],
                     config['alocacoes'],
                     config['salas']
+                    
                 )
                 horario.gerar_individuo_aleatorio()
                 grades.append(horario)

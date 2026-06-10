@@ -37,20 +37,20 @@ class Disciplina:
         print(f"{aluno.nome} adicionado à disciplina {self.nome}")
 
 
-    def addProfessor(self, professor : Professor):
-        #Prevenção caso o professor tenha um horário bloqueado que coincida com o horário da disciplina
-        for horario_bloqueado in professor.getHorarios_Bloqueados():
-            if horario_bloqueado in self.horarios:
-                print(f"Professor {professor.nome} não pode ser adicionado neste horário!"
-                      f" O horário {horario_bloqueado} está bloqueado para ele.")
-                return
+    # def addProfessor(self, professor : Professor):
+    #     #Prevenção caso o professor tenha um horário bloqueado que coincida com o horário da disciplina
+    #     for horario_bloqueado in professor.getHorarios_Bloqueados():
+    #         if horario_bloqueado in self.horarios:
+    #             print(f"Professor {professor.nome} não pode ser adicionado neste horário!"
+    #                   f" O horário {horario_bloqueado} está bloqueado para ele.")
+    #             return
 
-        #Prevençao caso a disciplina já tenha um professor atribuído
-        if self.professor is not None:
-            print(f"A disciplina já tem um professor atribuído: {self.professor.nome}")
-            return
+    #     #Prevençao caso a disciplina já tenha um professor atribuído
+    #     if self.professor is not None:
+    #         print(f"A disciplina já tem um professor atribuído: {self.professor.nome}")
+    #         return
 
-        self.professor = professor
+    #     self.professor = professor
 
         # print(f"Professor {self.professor.nome} adicionado à disciplina {self.nome}")
 

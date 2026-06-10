@@ -71,6 +71,9 @@ class AlgoritmoGenetico:
         if random.random() > self.taxa_crossover:
             filho1 = self._copiar_individuo(pai1)
             filho2 = self._copiar_individuo(pai2)
+
+            filho1.reconstruir_ocupacao_salas()
+            filho2.reconstruir_ocupacao_salas()
             return filho1, filho2
 
         # Escolhe o ponto de corte (entre 1 e len(DIAS)-1 para garantir mistura)
@@ -132,6 +135,8 @@ class AlgoritmoGenetico:
         filho1 = Individuo(grades_filho1)
         filho2 = Individuo(grades_filho2)
 
+        filho1.reconstruir_ocupacao_salas()
+        filho2.reconstruir_ocupacao_salas()
         return filho1, filho2
 
     # =========================================================================
@@ -223,6 +228,12 @@ class AlgoritmoGenetico:
                 # Aplicamos pequenas mudanças aleatórias nos filhos
                 self.mutacao(filho1)
                 self.mutacao(filho2)
+
+                # MUITO IMPORTANTE:
+                # reconstrói as ocupações reais das salas
+                filho1.reconstruir_ocupacao_salas()
+                filho2.reconstruir_ocupacao_salas()
+
 
                 # --- PASSO 4: AVALIAÇÃO DOS FILHOS ---
                 # Calculamos o fitness de cada filho

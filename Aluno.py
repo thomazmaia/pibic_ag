@@ -1,3 +1,4 @@
+
 from Semestre import Semestre
 
 class Aluno:

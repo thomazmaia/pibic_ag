@@ -24,12 +24,13 @@ from Horario import DIAS, TURNOS
 # Restrições flexíveis (desejáveis) têm pesos menores.
 # -----------------------------------------------------------------------------
 
-PESO_RIGIDA = 10   # viola uma regra obrigatória
+PESO_RIGIDA = 50   # viola uma regra obrigatória
 PESO_FLEX_1 =  5   # mesma turma em slots seguidos com o mesmo professor
 PESO_FLEX_2 =  3   # mais de 2 aulas da mesma turma no mesmo dia
 PESO_FLEX_3 =  3   # horário livre não priorizado no início da manhã ou fim da tarde
 PESO_FLEX_4 =  1   # tarde ou noite preenchida antes da manhã
 PESO_FLEX_5 =  4   # janela (buraco) no horário do professor
+PESO_FLEX_6 =  2   # As aulas de uma turma devem ficar concentradas numa mesma sala de aula;
 
 
 # =============================================================================
@@ -49,10 +50,15 @@ def calcular_fitness(grades):
     # --- Restrições rígidas (obrigatórias) ---
     pontuacao = pontuacao + rigida_sala_dupla_ocupacao(grades)
     pontuacao = pontuacao + rigida_turma_em_dois_lugares(grades)
+    pontuacao = pontuacao + rigida_disciplina_professor_unico(grades)
+    pontuacao = pontuacao + rigida_dias_concentrados(grades)
     pontuacao = pontuacao + rigida_horario_bloqueado(grades)
     pontuacao = pontuacao + rigida_sala_incompativel(grades)
     pontuacao = pontuacao + rigida_max_aulas_por_dia(grades)
     pontuacao = pontuacao + rigida_noite_manha(grades)
+
+    # caso uma aula prevista pela carga horária não tenha sido alocada, é uma violação grave
+    pontuacao = pontuacao + rigida_aulas_nao_alocadas(grades)
 
     # --- Restrições flexíveis (desejáveis) ---
     pontuacao = pontuacao + flex1_aulas_seguidas_mesma_turma(grades)
@@ -60,6 +66,7 @@ def calcular_fitness(grades):
     pontuacao = pontuacao + flex3_horarios_livres_posicao(grades)
     pontuacao = pontuacao + flex4_manha_antes_tarde_noite(grades)
     pontuacao = pontuacao + flex5_janela_no_horario(grades)
+    pontuacao = pontuacao + flex6_mesma_sala_turma(grades)
 
     return pontuacao
 
@@ -70,7 +77,7 @@ def calcular_fitness(grades):
 # Se a regra for violada, somamos PESO_RIGIDA (10) por cada violação.
 # =============================================================================
 
-def rigida_sala_dupla_ocupacao(grades):
+def rigida_sala_dupla_ocupacao(grades): # RR8
     """
     Regra: Duas aulas não podem acontecer na mesma sala ao mesmo tempo.
 
@@ -132,6 +139,81 @@ def rigida_turma_em_dois_lugares(grades):
 
     return pontuacao
 
+def rigida_disciplina_professor_unico(grades):
+    """
+    Regra:
+    Uma disciplina deve pertencer a apenas um professor.
+    """
+
+    pontuacao = 0
+
+    professores_por_disciplina = {}
+
+    for horario in grades:
+
+        professor = horario.professor.nome
+
+        for dia in DIAS:
+            for turno in TURNOS:
+                for slot in TURNOS[turno]:
+
+                    aula = horario.grade[dia][turno][slot]
+
+                    if aula is not None:
+
+                        cod_disciplina = aula.disciplina.cod
+
+                        if cod_disciplina not in professores_por_disciplina:
+                            professores_por_disciplina[cod_disciplina] = set()
+
+                        professores_por_disciplina[cod_disciplina].add(professor)
+
+    for disciplina in professores_por_disciplina:
+
+        if len(professores_por_disciplina[disciplina]) > 1:
+            pontuacao += PESO_RIGIDA
+
+    return pontuacao
+
+def rigida_dias_concentrados(grades):
+
+    pontuacao = 0
+
+    for horario in grades:
+
+        if not horario.professor.getDias_concentrados():
+            continue
+
+        dias_utilizados = []
+
+        for i, dia in enumerate(DIAS):
+
+            possui_aula = False
+
+            for turno in TURNOS:
+                for slot in TURNOS[turno]:
+
+                    if horario.grade[dia][turno][slot] is not None:
+                        possui_aula = True
+                        break
+
+                if possui_aula:
+                    break
+
+            if possui_aula:
+                dias_utilizados.append(i)
+
+        dias_utilizados.sort()
+
+        for i in range(len(dias_utilizados) - 1):
+
+            atual = dias_utilizados[i]
+            prox = dias_utilizados[i + 1]
+
+            if prox - atual > 1:
+                pontuacao += PESO_RIGIDA
+
+    return pontuacao
 
 def rigida_horario_bloqueado(grades):
     """
@@ -229,6 +311,49 @@ def rigida_noite_manha(grades):
 
     return pontuacao
 
+def rigida_aulas_nao_alocadas(grades):
+    """
+    Regra:
+    Todas as aulas previstas pela carga horária
+    devem ser alocadas.
+
+    Se faltarem slots, aplica punição.
+    """
+
+    pontuacao = 0
+
+    for horario in grades:
+
+        for alocacao in horario.alocacoes:
+
+            disciplina = alocacao[0]
+
+            # Quantos slots deveriam existir
+            slots_necessarios = disciplina.carga_horaria // 2
+
+            # Quantos slots realmente existem
+            slots_alocados = 0
+
+            for dia in DIAS:
+                for turno in TURNOS:
+                    for slot in TURNOS[turno]:
+
+                        aula = horario.grade[dia][turno][slot]
+
+                        if aula is not None:
+
+                            if aula.disciplina.cod == disciplina.cod:
+                                slots_alocados += 1
+
+            # Quantos faltaram
+            faltando = slots_necessarios - slots_alocados
+
+            if faltando > 0:
+
+                # punição por slot faltando
+                pontuacao += faltando * PESO_RIGIDA
+
+    return pontuacao
 
 # =============================================================================
 # RESTRIÇÕES FLEXÍVEIS
@@ -288,11 +413,11 @@ def flex2_muitas_aulas_mesma_turma_no_dia(grades):
                         cod = aula.turma.cod
                         if cod not in contagem_por_turma:
                             contagem_por_turma[cod] = 0
-                        contagem_por_turma[cod] = contagem_por_turma[cod] + 1
+                        contagem_por_turma[cod] += 1
 
             for cod in contagem_por_turma:
-                if contagem_por_turma[cod] > 2:
-                    pontuacao = pontuacao + PESO_FLEX_2
+                if contagem_por_turma[cod] > 1:
+                    pontuacao += PESO_FLEX_2
 
     return pontuacao
 
@@ -401,5 +526,40 @@ def flex5_janela_no_horario(grades):
             for i in range(primeiro_com_aula, ultimo_com_aula):
                 if ocupacao[i] == 0:
                     pontuacao = pontuacao + PESO_FLEX_5
+
+    return pontuacao
+
+def flex6_mesma_sala_turma(grades):
+
+    pontuacao = 0
+
+    salas_por_turma = {}
+
+    for horario in grades:
+
+        for dia in DIAS:
+            for turno in TURNOS:
+                for slot in TURNOS[turno]:
+
+                    aula = horario.grade[dia][turno][slot]
+
+                    if aula is None:
+                        continue
+
+                    turma = aula.turma.cod
+                    sala = aula.sala.num_sala
+
+                    if turma not in salas_por_turma:
+                        salas_por_turma[turma] = set()
+
+                    salas_por_turma[turma].add(sala)
+
+    for turma in salas_por_turma:
+
+        quantidade_salas = len(salas_por_turma[turma])
+
+        if quantidade_salas > 1:
+
+            pontuacao += (quantidade_salas - 1) * PESO_FLEX_6
 
     return pontuacao
