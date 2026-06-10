@@ -136,11 +136,11 @@ populacao.estatisticas()
 ag = AlgoritmoGenetico(
     populacao       = populacao,
     taxa_crossover  = 0.9,
-    taxa_mutacao    = 0.09,
-    tamanho_torneio = 2
+    taxa_mutacao    = 0.1,
+    tamanho_torneio = 10
 )
 
-ag.evoluir(numero_de_geracoes=500)
+ag.evoluir(numero_de_geracoes=1000)
 
 populacao.estatisticas()
 
@@ -152,3 +152,15 @@ historico = ag.historico_melhor_fitness
 for i in range(len(historico)):
     if (i + 1) % 10 == 0 or i == 0:
         print("  Geração " + str(i + 1) + ": fitness = " + str(historico[i]))
+
+# 1. Se inscrever no CONNEPI
+# 2. Baixar o modelo (https://docs.google.com/document/d/1M6N3LYp6ECwbxcCcYJtKniB0h9iQNGPB/edit)
+# 3. Ir preenchendo o modelo com informações básicas (título, nomes, etc)
+# 4. Escrever introdução contendo: introdução + objetivos + breve revisão bibliográfica sobre otimização (time tabling) e AG
+# 5. Preencher mais professores/disciplinas/horário para gerar mais conflitos com restrições.
+# 6. Pesquisar biblioteca para gerar gráficos (Ex: matplotlib)
+# 7. Gerar resultados. Gráficos variando os parâmetros (varia um e mantém os outros). Para cada configuração escolhida, rodar umas 15 vezes e tirar a média.
+# 8. Documentar os resultados
+# 9. Escerver a metodologia. Basicamente é explicar as restrições e como foi adaptado o problema de criação de horário para os códigos em Python usando AG.
+# 10. Escrevr os resultados obtidos
+# 11. Escrever conclusões.
