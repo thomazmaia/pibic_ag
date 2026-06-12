@@ -153,9 +153,6 @@ for i in range(len(historico)):
     if (i + 1) % 10 == 0 or i == 0:
         print("  Geração " + str(i + 1) + ": fitness = " + str(historico[i]))
 
-# 1. Se inscrever no CONNEPI
-# 2. Baixar o modelo (https://docs.google.com/document/d/1M6N3LYp6ECwbxcCcYJtKniB0h9iQNGPB/edit)
-# 3. Ir preenchendo o modelo com informações básicas (título, nomes, etc)
 # 4. Escrever introdução contendo: introdução + objetivos + breve revisão bibliográfica sobre otimização (time tabling) e AG
 # 5. Preencher mais professores/disciplinas/horário para gerar mais conflitos com restrições.
 # 6. Pesquisar biblioteca para gerar gráficos (Ex: matplotlib)
