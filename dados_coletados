@@ -1,0 +1,336 @@
+Dados estáticos:
+10 professores;
+ prof1, prof4, prof9, prof10 são dias concentrados
+8 turmas;
+38 disciplinas:
+ 33 normais
+ 5 técnicas
+18 salas:
+ 12 normais
+ 6 laboratórios
+
+
+
+Primeiro grupo de testes:
+Número de gerações: 750
+Número de indivíduos: 50
+taxa_crossover  = 0.87
+taxa_mutacao    = 0.1
+tamanho_torneio = 3
+
+1- 
+  Melhor fitness  : 796
+  Pior fitness    : 2117
+  Média fitness   : 1165.2
+
+  Melhor fitness  : 152
+  Pior fitness    : 355
+  Média fitness   : 163.3
+
+  Média estagnada: 310-420
+
+2-
+  Melhor fitness  : 858
+  Pior fitness    : 1656
+  Média fitness   : 1173.9
+
+  Melhor fitness  : 153
+  Pior fitness    : 256
+  Média fitness   : 162.2
+
+  Média estagnada: 310-530
+
+3-
+  Melhor fitness  : 711
+  Pior fitness    : 1523
+  Média fitness   : 1127.0
+
+  Melhor fitness  : 188
+  Pior fitness    : 346
+  Média fitness   : 199.7
+
+  Média estagnada: 310-690
+
+4-
+  Melhor fitness  : 793
+  Pior fitness    : 1756
+  Média fitness   : 1162.2
+
+  Melhor fitness  : 196
+  Pior fitness    : 302
+  Média fitness   : 211.8
+
+  Média estagnada: 290-530
+
+5-
+  Melhor fitness  : 604
+  Pior fitness    : 1697
+  Média fitness   : 1149.8
+
+  Melhor fitness  : 101
+  Pior fitness    : 205
+  Média fitness   : 108.3
+
+  Média estagnada: 270-600
+
+6-
+  Melhor fitness  : 832
+  Pior fitness    : 1759
+  Média fitness   : 1195.5
+
+  Melhor fitness  : 204
+  Pior fitness    : 355
+  Média fitness   : 215.8
+
+  Média estagnada: 280-680
+
+7-
+  Melhor fitness  : 750
+  Pior fitness    : 1918
+  Média fitness   : 1193.5
+
+  Melhor fitness  : 58
+  Pior fitness    : 161
+  Média fitness   : 69.7
+
+  Média estagnada: 230-610
+
+8-
+  Melhor fitness  : 831
+  Pior fitness    : 1741
+  Média fitness   : 1180.7
+
+  Melhor fitness  : 100
+  Pior fitness    : 209
+  Média fitness   : 115.0
+
+  Média estagnada: 310-570
+
+9-
+  Melhor fitness  : 870
+  Pior fitness    : 1503
+  Média fitness   : 1162.3
+
+  Melhor fitness  : 104
+  Pior fitness    : 159
+  Média fitness   : 108.1
+
+  Média estagnada: 360-680
+
+10-
+  Melhor fitness  : 784
+  Pior fitness    : 1649
+  Média fitness   : 1230.2
+
+  Melhor fitness  : 51
+  Pior fitness    : 157
+  Média fitness   : 66.5
+
+  Média estagnada: 290-470
+
+Melhor teste do Grupo 1:
+text 10: 51
+
+Segundo grupo de testes:
+Número de gerações: 750
+Número de indivíduos: 50
+taxa_crossover  = 0.87
+taxa_mutacao    = 0.1
+tamanho_torneio = 10
+
+1-
+  Melhor fitness  : 789
+  Pior fitness    : 1781
+  Média fitness   : 1152.9
+
+  Melhor fitness  : 50
+  Pior fitness    : 211
+  Média fitness   : 66.6
+
+  Média estagnada: 320-740
+
+2-
+  Melhor fitness  : 825
+  Pior fitness    : 2179
+  Média fitness   : 1162.5
+
+  Melhor fitness  : 105
+  Pior fitness    : 306
+  Média fitness   : 126.8
+
+  Média estagnada: 280-400
+
+3-
+  Melhor fitness  : 684
+  Pior fitness    : 1618
+  Média fitness   : 1115.6
+
+  Melhor fitness  : 54
+  Pior fitness    : 117
+  Média fitness   : 60.8
+
+  Média estagnada: 260-490
+
+4-
+  Melhor fitness  : 722
+  Pior fitness    : 1618
+  Média fitness   : 1178.3
+
+  Melhor fitness  : 52
+  Pior fitness    : 156
+  Média fitness   : 60.7
+
+  Média estagnada: 260-590
+
+5-
+  Melhor fitness  : 742
+  Pior fitness    : 1602
+  Média fitness   : 1176.5
+
+  Melhor fitness  : 56
+  Pior fitness    : 160
+  Média fitness   : 64.8
+
+  Média estagnada: 160-400
+
+6-
+  Melhor fitness  : 773
+  Pior fitness    : 1918
+  Média fitness   : 1130.1
+
+  Melhor fitness  : 105
+  Pior fitness    : 164
+  Média fitness   : 109.3
+
+  Média estagnada: 230-730
+
+7-
+  Melhor fitness  : 707
+  Pior fitness    : 1648
+  Média fitness   : 1192.9
+
+  Melhor fitness  : 100
+  Pior fitness    : 325
+  Média fitness   : 114.6
+
+  Média estagnada: 310-730
+
+8-
+  Melhor fitness  : 706
+  Pior fitness    : 1492
+  Média fitness   : 1060.2
+
+  Melhor fitness  : 47
+  Pior fitness    : 166
+  Média fitness   : 58.5
+
+  Média estagnada: 280-630
+
+9-
+  Melhor fitness  : 771
+  Pior fitness    : 1682
+  Média fitness   : 1165.1
+
+  Melhor fitness  : 107
+  Pior fitness    : 257
+  Média fitness   : 121.7
+
+  Média estagnada: 230-500
+
+10-
+  Melhor fitness  : 729
+  Pior fitness    : 1558
+  Média fitness   : 1169.4
+
+  Melhor fitness  : 100
+  Pior fitness    : 209
+  Média fitness   : 111.6
+
+  Média estagnada: 280-440
+
+Melhor teste do Grupo 2:
+teste 8: 47
+
+Terceiro Grupo de testes:
+Número de gerações: 750
+Número de indivíduos: 50
+taxa_crossover  = 0.91,
+taxa_mutacao    = 0.1,
+tamanho_torneio = 10
+
+1-
+  Melhor fitness  : 827
+  Pior fitness    : 1579
+  Média fitness   : 1151.4
+
+  Melhor fitness  : 52
+  Pior fitness    : 202
+  Média fitness   : 69.6
+
+  Média estagnada: 230-730
+
+2-
+  Melhor fitness  : 825
+  Pior fitness    : 1799
+  Média fitness   : 1203.8
+
+  Melhor fitness  : 136
+  Pior fitness    : 295
+  Média fitness   : 157.0
+
+  Média estagnada: 320-450
+
+3-
+  Melhor fitness  : 803
+  Pior fitness    : 1831
+  Média fitness   : 1211.9
+
+  Melhor fitness  : 54
+  Pior fitness    : 158
+  Média fitness   : 63.0
+
+  Média estagnada: 240-730
+
+4-
+  Melhor fitness  : 830
+  Pior fitness    : 1642
+  Média fitness   : 1188.2
+
+  Melhor fitness  : 105
+  Pior fitness    : 219
+  Média fitness   : 116.2
+
+  Média estagnada: 270-610
+
+5-
+  Melhor fitness  : 777
+  Pior fitness    : 1674
+  Média fitness   : 1127.3
+
+  Melhor fitness  : 54
+  Pior fitness    : 112
+  Média fitness   : 57.4
+
+  Média estagnada: 250-630
+
+6-
+  Melhor fitness  : 583
+  Pior fitness    : 1595
+  Média fitness   : 1156.3
+
+  Melhor fitness  : 55
+  Pior fitness    : 168
+  Média fitness   : 67.2
+
+  Média estagnada: 170-740
+
+7-
+  Melhor fitness  : 783
+  Pior fitness    : 1772
+  Média fitness   : 1179.6
+
+  Melhor fitness  : 49
+  Pior fitness    : 149
+  Média fitness   : 59.9
+
+  Média estagnada: 140-740
