@@ -205,7 +205,7 @@ configuracoes = [
     {'professor': prof10, 'alocacoes': alocacoes_prof10, 'salas': salas}, # Tiago
 ]
 
-populacao = Populacao(tamanho=50, configuracoes=configuracoes)
+populacao = Populacao(tamanho=75, configuracoes=configuracoes)
 populacao.gerar()
 populacao.avaliar()
 
@@ -213,7 +213,7 @@ populacao.estatisticas()
 
 ag = AlgoritmoGenetico(
     populacao       = populacao,
-    taxa_crossover  = 0.87,
+    taxa_crossover  = 0.91,
     taxa_mutacao    = 0.1,
     tamanho_torneio = 10
 )
@@ -250,10 +250,6 @@ plt.savefig("evolucao_fitness.png", dpi=300)
 plt.show()
 # Não feitos:
 
-
-
-
-# 8. Documentar os resultados
 # 9. Escerver a metodologia. Basicamente é explicar as restrições e como foi adaptado o problema de criação de horário para os códigos em Python usando AG.
 # 10. Escrevr os resultados obtidos
 # 11. Escrever conclusões.
@@ -265,3 +261,4 @@ plt.show()
 # 5. Preencher mais professores/disciplinas/horário para gerar mais conflitos com restrições.
 # 6. Pesquisar biblioteca para gerar gráficos (Ex: matplotlib)
 # 7. Gerar resultados. Gráficos variando os parâmetros (varia um e mantém os outros). Para cada configuração escolhida, rodar umas 15 vezes e tirar a média.
+# 8. Documentar os resultados
